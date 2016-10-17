@@ -43,4 +43,19 @@ public class Main {
         }
         return users;
     }
+
+    public static User editUser (Connection conn,String name,String address,String email) throws SQLException {
+        PreparedStatement stmt = conn.prepareStatement("UPDATE users SET name = ?,address = ?,email = ?");
+        stmt.setString(1,name);
+        stmt.setString(2,address);
+        stmt.setString(3,email);
+        stmt.execute();
+        return new User(name,address,email);
+    }
+
+    public static void deleteUser (Connection conn,Integer id) throws SQLException {
+        PreparedStatement stmt = conn.prepareStatement("DELETE FROM users WHERE id = ?");
+        stmt.setInt(1,id);
+        stmt.execute();
+    }
 }
