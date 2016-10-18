@@ -1,10 +1,8 @@
 package com.company;
 
 import org.junit.Test;
-import org.w3c.dom.ranges.DocumentRange;
 
 import java.sql.Connection;
-import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -24,7 +22,8 @@ public class MainTest {
     @Test
     public void testUser() throws SQLException {
         Connection conn = startConnection();
-        Main.insertUser(conn,"Troy","Where st","tward4@tulane.edu");
+        User user = new User(1,"Troy","Where St","tward4@tulane.edu");
+        Main.insertUser(conn,user);
         ArrayList<User> users = Main.selectUsers(conn);
         conn.close();
         assertTrue(users.size() == 1);
@@ -33,16 +32,19 @@ public class MainTest {
     @Test
     public void testEdit() throws SQLException {
         Connection conn = startConnection();
-        Main.insertUser(conn,"Troy","Where st","tward4@tulane.edu");
-        User user = Main.editUser(conn,"Bob","There St","thenatural09@live.com");
+        User user = new User(1,"Troy","Where St","tward4@tulane.edu");
+        Main.insertUser(conn,user);
+        user = new User(1,"Bob","There St","thenatural09@live.com");
+        Main.editUser(conn,user);
         conn.close();
-        assertTrue(user.name.equals("Bob"));
+        assertTrue(user.username.equals("Bob"));
     }
 
     @Test
     public void testDelete() throws SQLException {
         Connection conn = startConnection();
-        Main.insertUser(conn,"Troy","Where st","tward4@tulane.edu");
+        User user = new User(1,"Troy","Where St","tward4@tulane.edu");
+        Main.insertUser(conn,user);
         Main.deleteUser(conn,1);
         ArrayList<User> users = Main.selectUsers(conn);
         conn.close();

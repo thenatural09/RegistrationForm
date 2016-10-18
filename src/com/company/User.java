@@ -5,19 +5,13 @@ package com.company;
  */
 public class User {
     Integer id;
-    String name;
+    String username;
     String address;
     String email;
 
-    public User(Integer id, String name, String address, String email) {
+    public User(Integer id, String username, String address, String email) {
         this.id = id;
-        this.name = name;
-        this.address = address;
-        this.email = email;
-    }
-
-    public User(String name, String address, String email) {
-        this.name = name;
+        this.username = username;
         this.address = address;
         this.email = email;
     }
@@ -29,8 +23,8 @@ public class User {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
     public String getAddress() {
