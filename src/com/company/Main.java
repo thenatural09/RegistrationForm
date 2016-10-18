@@ -1,10 +1,13 @@
 package com.company;
 
+import jodd.json.JsonParser;
+import jodd.json.JsonSerializer;
 import org.h2.tools.Server;
 import spark.Spark;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Main {
 
@@ -13,6 +16,49 @@ public class Main {
         createTable(conn);
         Spark.externalStaticFileLocation("public");
         Spark.init();
+
+        Spark.get(
+                "/user",
+                (request,response) -> {
+                    ArrayList<User> users = selectUsers(conn);
+                    JsonSerializer serializer = new JsonSerializer();
+                    UserWrapper wrapper = new UserWrapper(users);
+                    return serializer.deep(true).serialize(wrapper);
+                }
+        );
+
+        Spark.post(
+                "/user",
+                (request,response) -> {
+                    String body = request.body();
+                    JsonParser parser = new JsonParser();
+                    HashMap<String,String> m = parser.parse(body);
+                    User user = new User(m.get("name"),m.get("address"),m.get("email"));
+                    insertUser(conn,user.name,user.address,user.email);
+                    return null;
+                }
+        );
+
+        Spark.put(
+                "/user",
+                (request, response) -> {
+                    String body = request.body();
+                    JsonParser parser = new JsonParser();
+                    HashMap<String,String> m = parser.parse(body);
+                    User user = new User(m.get("name"),m.get("address"),m.get("email"));
+                    editUser(conn,user.name,user.address,user.email);
+                    return null;
+                }
+        );
+
+        Spark.delete(
+                "/user:id",
+                (request,response) -> {
+                    Integer id = Integer.valueOf(request.queryParams(":id"));
+                    deleteUser(conn,id);
+                    return null;
+                }
+        );
 
     }
 
